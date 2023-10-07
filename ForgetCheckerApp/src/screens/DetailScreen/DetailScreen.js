@@ -65,8 +65,8 @@ const DetailScreen = ({navigation, route}) => {
         BleManager.Scan([], -1, true);
 
         BleManager.setPeripheralNotificationCallback((peripheral) => {
-        if (peripheral.id === 'Your_Device_ID') {
-            // 特定のデバイスが検出されたら、ToDoアイテムを自動的にチェックするロジックをここに追加
+        if (peripheral.name === "BTMEL") {
+            // 特定のデバイスが検出されたら、アイテムを自動的にチェックするロジックをここに追加
             const newChecklist = [...checklist];
             newChecklist[0].checked = true;
             setChecklist(newChecklist);
@@ -77,6 +77,7 @@ const DetailScreen = ({navigation, route}) => {
             newChecklist[0].checked = true;
             setChecklist(newChecklist);
         }
+        console.log("BTScan");
     };
 
     return (
