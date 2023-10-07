@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
     View,
     Button,
@@ -21,6 +21,14 @@ const HomeScreen = ({navigation}) => {
             loadNotes(setNotes); 
         });
         return unsubscribe;
+    }, [navigation]);
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button title="Settings" onPress={() => navigation.navigate('Settings')} />
+            ),
+        });
     }, [navigation]);
     
     return (

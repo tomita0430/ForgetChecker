@@ -15,6 +15,7 @@ export const loadNote = async (noteID, setNoteName, setChecklist) => {
 
 export const saveNote = async (noteID, noteName, checklist) => {
     try{
+        console.log(noteName);
         await AsyncStorage.setItem(
             noteID,
             JSON.stringify({ name: noteName, checklist: checklist })

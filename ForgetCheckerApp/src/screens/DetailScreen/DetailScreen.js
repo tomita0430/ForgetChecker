@@ -5,8 +5,10 @@ import {
 import HeaderTitleInput from '../../components/HeaderTitleInput'
 import CheckListItem from '../../components/CheckListItem'
 import styles from './DetailScreenStyles';
+import GPTService from '../../services/GPTService';
 import { loadNote, saveNote, deleteNote } from '../../utils/storageOperations';
-import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checklistOperations';
+import {loadUseSuggestion} from '../../utils/settingsOperations';
+import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checkListOperations';
 
 const DetailScreen = ({navigation, route}) => {
     if (!route.params || !route.params.note || !route.params.note.id) {
@@ -14,6 +16,9 @@ const DetailScreen = ({navigation, route}) => {
         return null; 
     }
     
+
+    const [useSuggestion, setUseSuggestion] = useState(false);
+
     const noteID = route.params.note.id.toString();
     const [noteName, setNoteName] = useState("");
     const [checklist, setChecklist] = useState([]);
@@ -24,13 +29,19 @@ const DetailScreen = ({navigation, route}) => {
         },[]
     );
 
-    const handleSuggest = () => {
-        const suggestedItems = suggestChecklistItems();
+    const handleSuggest = async () => {
+        const suggestedItems = await GPTService.getSuggestions(noteName);
         setChecklist([...checklist, ...suggestedItems]);
     };
 
+    const handleDelete = async() =>{
+        deleteNote(noteID);
+        navigation.goBack();
+    }
+
     useEffect(() => {
         loadNote(noteID, setNoteName, setChecklist);
+        loadUseSuggestion(setUseSuggestion);
     }, []);
     
     useEffect(() => {
@@ -50,7 +61,7 @@ const DetailScreen = ({navigation, route}) => {
             headerRight: () => (
                 <View style={{ flexDirection: 'row' }}>
                     <Button title="Save" onPress={() => saveNote(noteID, noteName, checklist)} />
-                    <Button title="Delete" onPress={() => deleteNote(noteID)} color="red" />
+                    <Button title="Delete" onPress={handleDelete} color="red" />
                 </View>
                 ),
             });
@@ -78,9 +89,11 @@ const DetailScreen = ({navigation, route}) => {
                 ))}
                 <Button title="Add Item" onPress={() => addCheckListItem(checklist, setChecklist)} />
             </View>
-            <View style={styles.footer}>
-                <Button title="Suggest" onPress={handleSuggest} />
-            </View>
+            {useSuggestion && (
+                <View style={styles.footer}>
+                    <Button title="Suggest" onPress={handleSuggest} />
+                </View>
+            )}
         </View>
     );
 };
