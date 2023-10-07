@@ -6,7 +6,8 @@ import HeaderTitleInput from '../../components/HeaderTitleInput'
 import CheckListItem from '../../components/CheckListItem'
 import styles from './DetailScreenStyles';
 import { loadNote, saveNote, deleteNote } from '../../utils/storageOperations';
-import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checklistOperations';
+import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checkListOperations';
+import BleManager from 'react-native-ble-manager';
 
 const DetailScreen = ({navigation, route}) => {
     if (!route.params || !route.params.note || !route.params.note.id) {
@@ -56,6 +57,28 @@ const DetailScreen = ({navigation, route}) => {
             });
     }, [navigation, checklist]);
 
+    const BTScan = () => {
+        /*
+        BleManager.start({ showAlert: false });
+
+        // スキャン結果のリスナーを設定
+        BleManager.Scan([], -1, true);
+
+        BleManager.setPeripheralNotificationCallback((peripheral) => {
+        if (peripheral.id === 'Your_Device_ID') {
+            // 特定のデバイスが検出されたら、ToDoアイテムを自動的にチェックするロジックをここに追加
+            const newChecklist = [...checklist];
+            newChecklist[0].checked = true;
+            setChecklist(newChecklist);
+        }
+        */
+        if (checklist.length > 0) {
+            const newChecklist = [...checklist];
+            newChecklist[0].checked = true;
+            setChecklist(newChecklist);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -80,6 +103,7 @@ const DetailScreen = ({navigation, route}) => {
             </View>
             <View style={styles.footer}>
                 <Button title="Suggest" onPress={handleSuggest} />
+                <Button title="Bluetooth" onPress={BTScan} />
             </View>
         </View>
     );
