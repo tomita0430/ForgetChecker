@@ -46,17 +46,6 @@ const HomeScreen = ({navigation}) => {
         });
         return unsubscribe;
     }, [navigation]);
-
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-        headerRight: () => (
-            <View style={{ flexDirection: 'row' }}>
-                <Button title="Add" onPress={addNote} />
-            </View>
-            ),
-        });
-    }, [navigation, notes]);
     
     return (
         <View style={styles.container}>

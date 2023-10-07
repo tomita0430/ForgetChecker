@@ -65,6 +65,11 @@ const DetailScreen = ({navigation, route}) => {
         }
     };
 
+    const deleteChecklistItem = (indexToDelete) => {
+        const newChecklist = checklist.filter((_, index) => index !== indexToDelete);
+        setChecklist(newChecklist);
+    };
+
     useEffect(() => {
         console.log("load");
         loadNote();
@@ -87,7 +92,6 @@ const DetailScreen = ({navigation, route}) => {
         navigation.setOptions({
         headerRight: () => (
             <View style={{ flexDirection: 'row' }}>
-                <Button title="Add" onPress={addChecklistItem} />
                 <Button title="Save" onPress={saveNote} />
                 <Button title="Delete" onPress={deleteNote} color="red" />
             </View>
@@ -116,6 +120,7 @@ const DetailScreen = ({navigation, route}) => {
                         }}
                         style={styles.input}
                     />
+                    <Button title="Delete" onPress={() => deleteChecklistItem(index)} color="red" />
                 </View>
             ))}
             <Button title="Add Item" onPress={addChecklistItem} />
@@ -129,16 +134,21 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     input: {
+        flex: 1, 
         height: 40,
-        borderColor: 'gray',
+        borderColor: '#ccc', 
         borderWidth: 1,
+        borderRadius: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
         marginBottom: 10,
-        padding: 10,
     },
     checklistItem: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
+        justifyContent: 'space-between',
+        paddingRight: 10,
     },
 });
 
