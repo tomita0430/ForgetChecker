@@ -5498,7 +5498,17 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native@*, react-native@0.72.5:
+react-native-ble-manager@^10.1.4:
+  version "10.1.4"
+  resolved "https://registry.npmjs.org/react-native-ble-manager/-/react-native-ble-manager-10.1.4.tgz"
+  integrity sha512-2nJr0d1OM/HBxejzgJoEuUTPcc/5B7gb9xLL7ljHGGFOMUbAB2qwnkNRw7v9AAega4swPxMLAmggwviDhuRI3w==
+
+react-native-ble-plx@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/react-native-ble-plx/-/react-native-ble-plx-3.0.0.tgz"
+  integrity sha512-A9tY8hmDLS3Wuq/vJXPQNoGDNnHRZsvdfXXP7Az1I7zYyyzLpqe7HUVqy5GvTgd0E9XudNDHmRaERdGAAXbCLQ==
+
+react-native@*, react-native@>=0.60.0, react-native@0.72.5:
   version "0.72.5"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.72.5.tgz"
   integrity sha512-oIewslu5DBwOmo7x5rdzZlZXCqDIna0R4dUwVpfmVteORYLr4yaZo5wQnMeR+H7x54GaMhmgeqp0ZpULtulJFg==
@@ -5562,7 +5572,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-"react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
