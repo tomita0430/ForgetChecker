@@ -8,7 +8,7 @@ import styles from './DetailScreenStyles';
 import GPTService from '../../services/GPTService';
 import { loadNote, saveNote, deleteNote } from '../../utils/storageOperations';
 import {loadUseSuggestion} from '../../utils/settingsOperations';
-import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checkListOperations';
+import { addCheckListItem, deleteCheckListItem} from '../../utils/checkListOperations';
 
 const DetailScreen = ({navigation, route}) => {
     if (!route.params || !route.params.note || !route.params.note.id) {
@@ -39,6 +39,11 @@ const DetailScreen = ({navigation, route}) => {
         navigation.goBack();
     }
 
+    const handleSave = async() => {
+        saveNote(noteID, noteName, checklist);
+        navigation.goBack();
+    }
+
     useEffect(() => {
         loadNote(noteID, setNoteName, setChecklist);
         loadUseSuggestion(setUseSuggestion);
@@ -60,7 +65,7 @@ const DetailScreen = ({navigation, route}) => {
         navigation.setOptions({
             headerRight: () => (
                 <View style={{ flexDirection: 'row' }}>
-                    <Button title="Save" onPress={() => saveNote(noteID, noteName, checklist)} />
+                    <Button title="Save" onPress={handleSave} />
                     <Button title="Delete" onPress={handleDelete} color="red" />
                 </View>
                 ),
@@ -72,8 +77,9 @@ const DetailScreen = ({navigation, route}) => {
             <View style={styles.content}>
                 {checklist.map((item, index) => (
                     <CheckListItem
-                        item={item}
-                        index={index}
+                        key={index.toString()}    
+                        item={item} 
+                        index={index.toString()}
                         onValueChange={(index, newValue) => {
                             const newChecklist = [...checklist];
                             newChecklist[index].checked = newValue;
