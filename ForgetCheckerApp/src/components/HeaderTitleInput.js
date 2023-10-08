@@ -6,16 +6,16 @@ const HeaderTitleInput = ({ initialName, onSave }) => {
     const [name, setName] = useState(initialName);
 
     useEffect(() => {
-        console.log("header");
-        console.log(initialName);
         setName(initialName);
     }, [initialName]);
 
     return (
     <TextInput
         value={name}
-        onChangeText={setName}
-        onEndEditing={() => onSave(name)}
+        onChangeText={(text) => {
+            setName(text);
+            onSave(text);
+        }}
         style={{fontSize: 18 }}
         placeholder="Enter name"
     />
