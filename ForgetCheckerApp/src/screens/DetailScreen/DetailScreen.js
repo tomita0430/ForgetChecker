@@ -7,7 +7,8 @@ import CheckListItem from '../../components/CheckListItem'
 import styles from './DetailScreenStyles';
 import { loadNote, saveNote, deleteNote } from '../../utils/storageOperations';
 import { addCheckListItem, deleteCheckListItem, suggestChecklistItems } from '../../utils/checkListOperations';
-import BleManager from 'react-native-ble-manager';
+import { NativeModules, NativeEventEmitter } from "react-native";
+
 
 const DetailScreen = ({navigation, route}) => {
     if (!route.params || !route.params.note || !route.params.note.id) {
@@ -18,6 +19,8 @@ const DetailScreen = ({navigation, route}) => {
     const noteID = route.params.note.id.toString();
     const [noteName, setNoteName] = useState("");
     const [checklist, setChecklist] = useState([]);
+    const BleManagerModule = NativeModules.BleManager;
+
     
     const handleSaveName = useCallback(
         (newName) => {
@@ -58,25 +61,65 @@ const DetailScreen = ({navigation, route}) => {
     }, [navigation, checklist]);
 
     const BTScan = () => {
+        //getConnectedBluetoothDevices();
+
         /*
+        try {
+            const connected = BluetoothClassic.getConnectedDevices();
+            console.log("getConnectedDevices");
+        } catch (error) {
+            console.error('Error scanning devices:', error);
+        }
         BleManager.start({ showAlert: false });
-
         // スキャン結果のリスナーを設定
-        BleManager.Scan([], -1, true);
-
-        BleManager.setPeripheralNotificationCallback((peripheral) => {
-        if (peripheral.name === "BTMEL") {
-            // 特定のデバイスが検出されたら、アイテムを自動的にチェックするロジックをここに追加
-            const newChecklist = [...checklist];
-            newChecklist[0].checked = true;
-            setChecklist(newChecklist);
+        BleManager.scan([], -1, true).then(() => {//スキャンに成功したら 
+            console.log('Scan started');//コンソールに左記を表示する
+        })
+        .catch((error) => {//スキャンに失敗したら
+            console.log(error);//コンソールにエラーを表示する
+        });
+        BleManager.getDiscoveredPeripherals([])
+        .then((peripheralsArray) => {
+            console.log('Discovered peripherals:', peripheralsArray);
+        })
+        .catch((error) => {
+            console.error('Error getting discovered peripherals:', error);
+        });
+        */
+        /*
+        useEffect(() => {
+            const listeners = [
+                bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral),
+            ];
+            return () => {
+                for (const listener of listeners) {
+                    listener.remove();
+                }
+            };
+        }, []);
+        const handleDiscoverPeripheral = (peripheral) => {
+            console.log(peripheral.id);
+            result.push(peripheral);
         }
         */
+        /*
+        BleManager.setPeripheralNotificationCallback((peripheral) => {
+            if (peripheral.name === "BTMEL") {
+                // 特定のデバイスが検出されたら、アイテムを自動的にチェックするロジックをここに追加
+                const newChecklist = [...checklist];
+                newChecklist[0].checked = true;
+                setChecklist(newChecklist);
+            }
+        });
+        */
+        
+        /*
         if (checklist.length > 0) {
             const newChecklist = [...checklist];
             newChecklist[0].checked = true;
             setChecklist(newChecklist);
         }
+        */
         console.log("BTScan");
     };
 
