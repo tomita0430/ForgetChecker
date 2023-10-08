@@ -6,7 +6,6 @@ const MODEL = 'gpt-4';
 
 const GPTService = {
     getSuggestions: async (noteName) => {
-        console.log(noteName);
         const prompt = `テーマが "キャンプ" の場合、{"テント" "寝袋" "ライト"}のように、テーマ"${noteName}"で忘れやすい3つの確認事項を考えてください。{"item" "item" "item"}形式で出力してください。`;
         try {
 
@@ -33,7 +32,6 @@ const GPTService = {
                 }
                 }
             );
-            console.log(response.data.choices[0].message);
             const rawOutput = response.data.choices[0].message.content;
             const cleanedOutput = rawOutput.replace(/{|}/g, '');
             const items = cleanedOutput.split('"').filter(item => item.trim() !== '');

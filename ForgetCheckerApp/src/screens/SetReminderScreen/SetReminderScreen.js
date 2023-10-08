@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { View, Button, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Button, Text, Linking } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import PushNotification from 'react-native-push-notification';
 import useDatePicker from '../../components/useDatePicker';
-import { scheduleNotification } from '../../utils/notificationManager';
+import { scheduleNotification, cancelNotification } from '../../utils/notificationManager';
+import styles from './SetReminderScreenStyles';
 
 const SetReminderScreen = ({ route }) => {
     const [date, setDate] = useState(new Date());
@@ -11,12 +13,22 @@ const SetReminderScreen = ({ route }) => {
     const handleConfirm = (date) => {
         hideDatePicker();
         setDate(date);
-        scheduleNotification(`Reminder for ${route.params.note.name}`, date);
+        scheduleNotification(`Reminder for ${route.params.note.name}`, date, { id: route.params.note.id });
+
+        PushNotification.localNotification({
+            channelId: "channel-id",
+            message: "Test Notification",
+        });
+    };
+
+    const handleCancel = () => {
+        cancelNotification(route.params.note.id);
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.container}>
             <Button title="Set Reminder" onPress={showDatePicker} />
+            <Button title="Cancel Reminder" onPress={handleCancel} />
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="datetime"
@@ -24,9 +36,10 @@ const SetReminderScreen = ({ route }) => {
                 onCancel={hideDatePicker}
                 is24Hour={true}
             />
-            <Text style={{ fontSize: 16, marginTop: 20 }}>Reminder set for: {date.toLocaleString()}</Text>
+            <Text style={styles.reminderText}>Reminder set for: {date.toLocaleString()}</Text>
         </View>
     );
 };
 
 export default SetReminderScreen;
+
