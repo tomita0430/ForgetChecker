@@ -1,19 +1,38 @@
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Note = ({ item, onPress }) => {
+const Note = ({ item, onPress, onSetReminder }) => {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.note}>
-            <Text>{item.name}</Text>
-        </TouchableOpacity>
+        <View style={styles.note}>
+            <TouchableOpacity onPress={onPress} style={styles.textContainer}>
+                <Text>{item.name}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.reminderButton} onPress={() => onSetReminder(item)}>
+                <Text style={styles.buttonText}>Reminder</Text>
+            </TouchableOpacity>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     note: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
         padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+    },
+    textContainer: {
+        flex: 1,
+    },
+    reminderButton: {
+        padding: 10,
+        backgroundColor: 'blue',  
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white', 
     },
 });
 

@@ -12,6 +12,10 @@ import styles from './HomeScreenStyles';
 const HomeScreen = ({navigation}) => {
     const [notes, setNotes] = useState([{id: uuid.v4(), name: 'Sample Note' }]);
 
+    const handleSetReminder = (note) => {
+        navigation.navigate('SetReminder', { note });
+    };
+
     useEffect(() => {
         loadNotes(setNotes);
     }, []);
@@ -39,6 +43,7 @@ const HomeScreen = ({navigation}) => {
                     <Note
                         item={item}
                         onPress={() => navigation.navigate('Detail', { note: item })}
+                        onSetReminder={handleSetReminder}
                     />
                 )}
                 keyExtractor={item => item.id}
