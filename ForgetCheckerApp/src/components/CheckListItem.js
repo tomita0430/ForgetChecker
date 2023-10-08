@@ -5,7 +5,7 @@ import styles from '../screens/DetailScreen/DetailScreenStyles';
 
 const CheckListItem = ({ item, index, onValueChange, onChangeText, onDelete }) => {
     return (
-        <View style={styles.checklistItem} key={index}>
+        <View style={styles.checklistItem}>
             <CheckBox
                 value={item.checked}
                 onValueChange={newValue => onValueChange(index, newValue)}
