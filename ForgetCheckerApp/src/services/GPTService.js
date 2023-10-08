@@ -1,8 +1,13 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const API_URL = 'https://api.openai.com/v1/';
+const MODEL = 'gpt-4';
+
 const GPTService = {
     getSuggestions: async (noteName) => {
+        console.log(noteName);
+        const prompt = `テーマが "キャンプ" の場合、{"テント" "寝袋" "ライト"}のように、テーマ"${noteName}"で忘れやすい3つの確認事項を考えてください。{"item" "item" "item"}形式で出力してください。`;
         try {
 
             const apiKey = await AsyncStorage.getItem('GPT_API_KEY');
@@ -10,18 +15,30 @@ const GPTService = {
                 throw new Error('API Key is not set');
             }
             const response = await axios.post(
-                'https://api.openai.com/v1/engines/davinci/completions',
+                `${ API_URL }chat/completions`,
                 {
-                    prompt: `Generate a checklist for ${noteName}`,
+                    model: MODEL,
                     max_tokens: 50,
+                    messages:[
+                        {
+                            'role':'user',
+                            'content':prompt
+                        }
+                    ],
                 },
                 {
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 }
                 }
             );
-            return response.data.choices[0].text.trim().split('\n').map(item => ({ text: item, checked: false }));
+            console.log(response.data.choices[0].message);
+            const rawOutput = response.data.choices[0].message.content;
+            const cleanedOutput = rawOutput.replace(/{|}/g, '');
+            const items = cleanedOutput.split('"').filter(item => item.trim() !== '');
+            const formattedOutput = items.map(item => ({ text: item.trim(), checked: false }));
+            return formattedOutput;
         } catch (error) {
         console.error(error);
         }
