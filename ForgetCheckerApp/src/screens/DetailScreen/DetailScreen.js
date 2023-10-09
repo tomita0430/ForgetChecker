@@ -4,6 +4,7 @@ import {
     Button,
     Text,
     FlatList,
+    PermissionsAndroid,
     NativeModules,} from 'react-native';
 import HeaderTitleInput from '../../components/HeaderTitleInput'
 import CheckListItem from '../../components/CheckListItem'
@@ -30,6 +31,7 @@ const DetailScreen = ({navigation, route}) => {
     const [checklist, setChecklist] = useState([]);
     const [scannedDevices, setScannedDevices] = useState([]);
     const [isScanning, setIsScanning] = useState(false);
+    const [scanning, setScanning] = useState(false);
 
     
     const handleSaveName = useCallback(
@@ -126,6 +128,9 @@ const DetailScreen = ({navigation, route}) => {
             console.log('Bluetooth is enabled');
           });
         }
+        else {
+            console.log("Bluetooth is already enabled");
+        }
       });
   
       return () => {
@@ -137,6 +142,7 @@ const DetailScreen = ({navigation, route}) => {
         console.log("startScan_BT");
         setIsScanning(true);
         setScannedDevices([]);
+
         BluetoothSerial.discoverUnpairedDevices()
         .then((devices) => {
           const deviceNames = devices.map((device) => device.name);
@@ -151,6 +157,47 @@ const DetailScreen = ({navigation, route}) => {
     const stopScan_BT = () => {
       setIsScanning(false);
     };
+
+    const requestBluetoothPermission = async () => {
+        console.log("requestBluetoothPermission");
+        try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+              {
+                title: 'Bluetooth Scan Permission',
+                message: 'This app needs Bluetooth permission to scan for devices.',
+                buttonPositive: 'OK',
+              }
+            );
+        
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              console.log('Bluetooth permission granted');
+              // パーミッションが許可された場合の処理をここに記述
+              startScan();
+            } else {
+              console.log('Bluetooth permission denied');
+              // パーミッションが拒否された場合の処理をここに記述
+            }
+          } catch (err) {
+            console.warn(err);
+          }
+      };
+    
+      const startScan = async () => {
+        console.log("startScan");
+        try {
+          setScanning(true);
+          console.log("unpairedDevices");
+          const unpairedDevices = await BluetoothSerial.discoverUnpairedDevices();
+          console.log("unpairedDevices-set");
+          setDevices(unpairedDevices);
+          setScanning(false);
+        } catch (error) {
+          console.error('Error scanning devices:', error);
+          setScanning(false);
+        }
+        console.log("startScan end");
+      };
 
     const BTScan = () => {
         setIsLoading(true);
@@ -261,8 +308,8 @@ const DetailScreen = ({navigation, route}) => {
                     />
                 ))}
                 <Button title="Add Item" onPress={() => addCheckListItem(checklist, setChecklist)} />
-                <Button title="Bluetoothデバイスをスキャン開始" onPress={startScan_BT} disabled={isScanning} />
-                {isScanning && <Text>スキャン中...</Text>}
+                <Button title="Bluetoothデバイスをスキャン開始" onPress={requestBluetoothPermission} disabled={scanning} />
+                {scanning && <Text>スキャン中...</Text>}
                 <Text>Scanned Bluetooth Devices:</Text>
                 <FlatList
                 data={scannedDevices}
